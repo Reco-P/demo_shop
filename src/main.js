@@ -8,6 +8,15 @@ import './assets/global.css'
 import axios from 'axios'
 // 配置请求的根路径
 axios.defaults.baseURL = ''
+/*
+// 为每一次请求添加请求拦截器
+axios.interceptors.request.use(config => {
+  // console.log(config)
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  // 最后return config
+  return config
+})
+*/
 Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
