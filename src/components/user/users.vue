@@ -10,8 +10,9 @@
     <el-card class="box-card">
       <el-row :gutter="20">
         <el-col :span="8">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <!-- 使用clearable属性即可得到一个可清空的输入框 -->
+          <el-input placeholder="请输入内容" v-model="searchData" clearable>
+            <el-button slot="append" icon="el-icon-search" @click="getSearchData()"></el-button>
           </el-input>
         </el-col>
         <el-col :span="6">
@@ -62,7 +63,8 @@ export default {
         pagesize: 2
       },
       userlist: [],
-      total: 0
+      total: 0,
+      searchData: ''
     }
   },
   created() {
@@ -108,6 +110,19 @@ export default {
         return this.$message.error('更新用户失败!')
       }
       this.$message.success('更新用户状态成功')
+    },
+    // 搜索功能  也就是说有两种获取方式，一种是获取全部数据后，只需要过滤数据就可以，另外一种就是直接以搜索条件为索引请求数据
+    // 这里是第二种方式
+    async getSearchData() {
+      // console.log(this.searchData)
+      // 这里还需要防止sql注入 以及XSS攻击
+      const { data: res } = await this.$http.put('user/' + this.searchData)
+      if (res.meta.status !== 200) {
+        return this.$message.error('搜索用户失败!')
+      }
+      // 获取数据后更新列表
+      this.userlist = res.meta.users
+      this.total = res.meta.total
     }
   }
 }
