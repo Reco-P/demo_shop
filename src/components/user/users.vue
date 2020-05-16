@@ -16,7 +16,46 @@
           </el-input>
         </el-col>
         <el-col :span="6">
-          <el-button type="primary">添加</el-button>
+          <el-button type="primary" @click="dialogFormVisible = true">添加</el-button>
+          <!-- 新建用户 -->
+          <el-dialog title="新建用户" :visible.sync="dialogFormVisible">
+            <el-form :model="createFormData" :rules="rules" ref="fromRef">
+                <el-form-item :required="true" label="姓名" prop="username" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.username" autocomplete="off" style="width: 300px;"></el-input>
+                </el-form-item>
+                <el-form-item :required="true" label="邮箱" prop="email" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.email" autocomplete="off" style="width: 300px;"></el-input>
+                </el-form-item>
+                <el-form-item :required="true" label="电话" prop="mobile" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.mobile" autocomplete="off" style="width: 300px;"></el-input>
+                </el-form-item>
+                <el-form-item :required="true" label="角色" prop="role_name" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.role_name" autocomplete="off" style="width: 300px;"></el-input>
+                </el-form-item>
+              </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button  @click="resetForm('fromRef')">取 消</el-button>
+              <el-button type="primary" @click="submitForm('fromRef')">确 定</el-button>
+            </div>
+          </el-dialog>
+          <!-- 修改用户 -->
+          <el-dialog title="修改用户" :visible.sync="modifyFormVisible">
+            <el-form :model="createFormData" :rules="rules" ref="fromRef">
+                <el-form-item :required="true" label="姓名" prop="username" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.username" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item :required="true" label="邮箱" prop="email" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.email" autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item :required="true" label="电话" prop="mobile" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.mobile" autocomplete="off"></el-input>
+                </el-form-item>
+              </el-form>
+            <div slot="footer" class="dialog-footer">
+              <el-button  @click="resetForm('fromRef')">取 消</el-button>
+              <el-button type="primary" @click="submitForm('fromRef')">确 定</el-button>
+            </div>
+          </el-dialog>
         </el-col>
       </el-row>
       <!-- 用户列表区 -->
@@ -37,7 +76,7 @@
         </el-table-column>
         <el-table-column label="操作" width="180px">
           <template>
-            <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="modifyFormVisible = true"></el-button>
             <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
@@ -55,6 +94,19 @@
 <script>
 export default {
   data() {
+    // 自定义表单验证
+    var checkEmail = (rule, value, callback) => {
+      if (!value) {
+        return callback(new Error('邮箱不能为空'))
+      }
+      setTimeout(() => {
+        if (value.indexOf('@') > -1) {
+          callback()
+        } else {
+          callback(new Error('请输入正确的邮箱格式'))
+        }
+      }, 1000)
+    }
     return {
       // 获取用户列表对象
       queryInfo: {
@@ -64,7 +116,37 @@ export default {
       },
       userlist: [],
       total: 0,
-      searchData: ''
+      searchData: '',
+      // 用户管理 添加弹框  新建
+      dialogFormVisible: false,
+      // 添加弹框，修改
+      modifyFormVisible: false,
+      formLabelWidth: '120px',
+      // form 表单验证
+      createFormData: {
+        username: '',
+        email: '',
+        mobile: '',
+        role_name: ''
+      },
+      // 定义规则
+      rules: {
+        username: [
+          { required: true, message: '姓名不能为空', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在1-15个字符', trigger: 'blur' }
+        ],
+        email: [
+          { validator: checkEmail, trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '电话不能为空', trigger: 'blur' },
+          { min: 3, max: 15, message: '长度在3-15个字符', trigger: 'blur' }
+        ],
+        role_name: [
+          { required: true, message: '角色不能为空', trigger: 'blur' },
+          { min: 1, max: 15, message: '长度在1-15个字符', trigger: 'blur' }
+        ]
+      }
     }
   },
   created() {
@@ -123,10 +205,36 @@ export default {
       // 获取数据后更新列表
       this.userlist = res.meta.users
       this.total = res.meta.total
+    },
+    // 新建
+    async submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // const { data: res } = await this.$http.put(...)
+          // if (res.meta.status !== 200) {
+          //   return this.$message.error('添加用户失败!')
+          // }
+          // this.$message.success('添加用户成功')
+          this.$message.success('添加用户成功')
+          this.dialogFormVisible = false
+        } else {
+          return false
+        }
+      })
+    },
+    // 修改
+    modifyForm() {},
+    resetForm(formName) {
+      this.dialogFormVisible = false
+      // this.$refs.fromRef.resetFields()
+      this.$refs[formName].resetFields()
     }
   }
 }
 </script>
 
 <style lang="less" scoped="scoped">
+.el-form-item .el-input {
+  width: 300px;
+}
 </style>
