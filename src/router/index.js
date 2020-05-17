@@ -4,6 +4,13 @@ import Login from '../components/login.vue'
 import Home from '../components/home.vue'
 import Welcome from '../components/welcome.vue'
 import Users from '../components/user/users.vue'
+import Charcters from '../components/rights/charcters.vue'
+import Roles from '../components/rights/roles.vue'
+import Lists from '../components/goods/lists.vue'
+import Goods from '../components/goods/goods.vue'
+import GoodLists from '../components/goods/goodLists.vue'
+import Orders from '../components/orders/orders.vue'
+import Reports from '../components/reports/reports.vue'
 
 Vue.use(VueRouter)
 
@@ -15,8 +22,21 @@ const routes = [
     component: Home,
     redirect: '/welcome',
     children: [
+      // 首页
       { path: '/welcome', component: Welcome },
-      { path: '/users', component: Users }
+      // 用户管理
+      { path: '/users', component: Users },
+      // 权限管理
+      { path: '/charcters', component: Charcters },
+      { path: '/roles', component: Roles },
+      // 商品管理
+      { path: '/lists', component: Lists },
+      { path: '/goods', component: Goods },
+      { path: '/goodLists', component: GoodLists },
+      // 订单管理
+      { path: '/orders', component: Orders },
+      // 数据统计
+      { path: '/reports', component: Reports }
     ]
   }
 ]

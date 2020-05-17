@@ -20,17 +20,17 @@
           <!-- 新建用户 -->
           <el-dialog title="新建用户" :visible.sync="dialogFormVisible">
             <el-form :model="createFormData" :rules="rules" ref="fromRef">
-                <el-form-item :required="true" label="姓名" prop="username" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.username" autocomplete="off" style="width: 300px;"></el-input>
+                <el-form-item label="姓名" prop="username" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.username" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item :required="true" label="邮箱" prop="email" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.email" autocomplete="off" style="width: 300px;"></el-input>
+                <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.email" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item :required="true" label="电话" prop="mobile" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.mobile" autocomplete="off" style="width: 300px;"></el-input>
+                <el-form-item label="电话" prop="mobile" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.mobile" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item :required="true" label="角色" prop="role_name" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.role_name" autocomplete="off" style="width: 300px;"></el-input>
+                <el-form-item label="角色" prop="role_name" :label-width="formLabelWidth">
+                  <el-input v-model="createFormData.role_name" autocomplete="off"></el-input>
                 </el-form-item>
               </el-form>
             <div slot="footer" class="dialog-footer">
@@ -40,20 +40,20 @@
           </el-dialog>
           <!-- 修改用户 -->
           <el-dialog title="修改用户" :visible.sync="modifyFormVisible">
-            <el-form :model="createFormData" :rules="rules" ref="fromRef">
-                <el-form-item :required="true" label="姓名" prop="username" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.username" autocomplete="off"></el-input>
+            <el-form :model="modifyFormData" :rules="rules" ref="modifyFromRef">
+                <el-form-item  label="姓名" prop="username" :label-width="formLabelWidth" >
+                  <el-input v-model="modifyFormData.username" autocomplete="off" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item :required="true" label="邮箱" prop="email" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.email" autocomplete="off"></el-input>
+                <el-form-item label="邮箱" prop="email" :label-width="formLabelWidth">
+                  <el-input v-model="modifyFormData.email" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item :required="true" label="电话" prop="mobile" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.mobile" autocomplete="off"></el-input>
+                <el-form-item label="电话" prop="mobile" :label-width="formLabelWidth">
+                  <el-input v-model="modifyFormData.mobile" autocomplete="off"></el-input>
                 </el-form-item>
               </el-form>
             <div slot="footer" class="dialog-footer">
-              <el-button  @click="resetForm('fromRef')">取 消</el-button>
-              <el-button type="primary" @click="submitForm('fromRef')">确 定</el-button>
+              <el-button  @click="resetForm('modifyFromRef')">取 消</el-button>
+              <el-button type="primary" @click="saveModifyForm('modifyFromRef')">确 定</el-button>
             </div>
           </el-dialog>
         </el-col>
@@ -75,9 +75,9 @@
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
-          <template>
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="modifyFormVisible = true"></el-button>
-            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="modifyForm(scope.row)"></el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteForm(scope.row)"></el-button>
             <el-tooltip class="item" effect="dark" content="分配角色" placement="top" :enterable="false">
               <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
             </el-tooltip>
@@ -129,7 +129,14 @@ export default {
         mobile: '',
         role_name: ''
       },
+      // 修改
+      modifyFormData: {
+        username: '',
+        email: '',
+        mobile: ''
+      },
       // 定义规则
+      // 是否为必填项请在规则处填写
       rules: {
         username: [
           { required: true, message: '姓名不能为空', trigger: 'blur' },
@@ -223,9 +230,46 @@ export default {
       })
     },
     // 修改
-    modifyForm() {},
+    modifyForm(info) {
+      this.modifyFormVisible = true
+      this.modifyFormData.username = info.username
+      this.modifyFormData.mobile = info.mobile
+      this.modifyFormData.email = info.email
+    },
+    async saveModifyForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          // const { data: res } = await this.$http.put(...)
+          // if (res.meta.status !== 200) {
+          //   return this.$message.error('修改用户失败!')
+          // }
+          // this.$message.success('修改用户成功')
+          this.$message.success('修改用户成功')
+          this.modifyFormVisible = false
+        } else {
+          return false
+        }
+      })
+    },
+    // 删除操作
+    async deleteForm(formName) {
+      this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // const { data: res } = await this.$http.put(...)
+        // if (res.meta.status !== 200) {
+        //   return this.$message.error('删除用户失败!')
+        // }
+        this.$message.success('删除成功!')
+      }).catch(() => {
+        this.$message.info('已取消删除')
+      })
+    },
     resetForm(formName) {
       this.dialogFormVisible = false
+      this.modifyFormVisible = false
       // this.$refs.fromRef.resetFields()
       this.$refs[formName].resetFields()
     }
