@@ -24,7 +24,8 @@ import
   Switch,
   Tooltip,
   Pagination,
-  Dialog
+  Dialog,
+  Loading
 } from 'element-ui'
 
 Vue.use(Button)
@@ -49,5 +50,7 @@ Vue.use(Switch)
 Vue.use(Tooltip)
 Vue.use(Pagination)
 Vue.use(Dialog)
+Vue.use(Loading)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$loading = Loading

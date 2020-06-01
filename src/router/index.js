@@ -1,28 +1,16 @@
-// 优化，采用路由懒加载
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import Login from '../components/login.vue'
-// import Home from '../components/home.vue'
-// import Welcome from '../components/welcome.vue'
-// import Users from '../components/user/users.vue'
-// import Charcters from '../components/rights/charcters.vue'
-// import Roles from '../components/rights/roles.vue'
-// import Lists from '../components/goods/lists.vue'
-// import Goods from '../components/goods/goods.vue'
-// import GoodLists from '../components/goods/goodLists.vue'
-// import Orders from '../components/orders/orders.vue'
-// import Reports from '../components/reports/reports.vue'
-const Login = () => import('../components/login.vue')
-const Home = () => import('../components/home.vue')
-const Welcome = () => import('../components/welcome.vue')
-const Users = () => import('../components/user/users.vue')
-const Charcters = () => import('../components/rights/charcters.vue')
-const Roles = () => import('../components/rights/roles.vue')
-const Lists = () => import('../components/goods/lists.vue')
-const Goods = () => import('../components/goods/goods.vue')
-const GoodLists = () => import('../components/goods/goodLists.vue')
-const Orders = () => import('../components/orders/orders.vue')
-const Reports = () => import('../components/reports/reports.vue')
+import Login from '../components/login.vue'
+import Home from '../components/home.vue'
+import Welcome from '../components/welcome.vue'
+import Users from '../components/user/users.vue'
+import Charcters from '../components/rights/charcters.vue'
+import Roles from '../components/rights/roles.vue'
+import Lists from '../components/goods/lists.vue'
+import Goods from '../components/goods/goods.vue'
+import GoodLists from '../components/goods/goodLists.vue'
+import Orders from '../components/orders/orders.vue'
+import Reports from '../components/reports/reports.vue'
 
 Vue.use(VueRouter)
 
@@ -58,7 +46,6 @@ const router = new VueRouter({
 })
 
 // 挂载路由导航守卫
-/*
 router.beforeEach((to, from, next) => {
   // to将要访问的路径
   // from 代表从哪个路径跳转而来
@@ -71,5 +58,5 @@ router.beforeEach((to, from, next) => {
   if (!tokenStr) return '/login'
   next()
 })
-*/
+
 export default router

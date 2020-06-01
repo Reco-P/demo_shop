@@ -17,6 +17,7 @@
         </el-col>
         <el-col :span="6">
           <el-button type="primary" @click="dialogFormVisible = true">添加</el-button>
+          <el-button type="primary" @click="refrechFrom">刷新</el-button>
           <!-- 新建用户 -->
           <el-dialog title="新建用户" :visible.sync="dialogFormVisible">
             <el-form :model="createFormData" :rules="rules" ref="fromRef">
@@ -61,7 +62,7 @@
       <!-- 用户列表区 -->
       <!-- border 边框属性 -->
       <!-- stripe 斑马纹 -->
-      <el-table :data="userlist" style="width: 100%" border>
+      <el-table :data="userlist" style="width: 100%" border v-loading="screenLoading">
         <el-table-column type="index"></el-table-column>
         <el-table-column prop="username" label="姓名"></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
@@ -71,7 +72,7 @@
           <!-- 作用域插槽的使用 -->
           <!-- 作用域插槽  {{ scope.row }}可以获得当前行的数据-->
           <template slot-scope="scope">
-            <el-switch v-model="scope.row.mg_status" @change="userStatusChanged(scope.row)"></el-switch>
+            <el-switch v-model="trans_boolean[scope.row.mg_status]" @change="userStatusChanged(scope.row)"></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
@@ -135,6 +136,11 @@ export default {
         email: '',
         mobile: ''
       },
+      trans_boolean: {
+        1: true,
+        0: false
+      },
+      screenLoading: false,
       // 定义规则
       // 是否为必填项请在规则处填写
       rules: {
@@ -160,22 +166,14 @@ export default {
     this.getUserList()
   },
   methods: {
+    // 获取列表数据
     async getUserList() {
-      /*
-      const { data: res } = await this.$http.get('users', { param: {} })
-      // console.log(res)
-      if (res.meta.status !== 200) {
+      const { data: res } = await this.$http.post('/api/user/user')
+      if (res.length === 0) {
         return this.$message.error('获取用户列表失败！')
       }
-      this.userlist = res.meta.users
-      this.total = res.meta.total
-      */
-      this.userlist =
-       [
-         { id: 500, role_name: '超级管理员', username: 'admin', mobile: '123', email: '123@qq.com', mg_status: true },
-         { id: 502, role_name: '测试角色2', username: 'testUser', mobile: '234', email: '234@qq.com', mg_status: false }
-       ]
-      this.total = 4
+      this.userlist = res
+      this.total = res.length
     },
     // 监听 pagesize 改变的事件
     handleSizeChange(newSize) {
@@ -193,7 +191,7 @@ export default {
     async userStatusChanged(userInfo) {
       // console.log(userInfo)
       // id type 是参数 user/:id/state/:type
-      const { data: res } = await this.$http.put('user/' + userInfo.id + '/state/' + userInfo.mg_status)
+      const { data: res } = await this.$http.post('user/' + userInfo.id + '/state/' + userInfo.mg_status)
       if (res.meta.status !== 200) {
         userInfo.mg_status = !userInfo.mg_status
         return this.$message.error('更新用户失败!')
@@ -205,7 +203,7 @@ export default {
     async getSearchData() {
       // console.log(this.searchData)
       // 这里还需要防止sql注入 以及XSS攻击
-      const { data: res } = await this.$http.put('user/' + this.searchData)
+      const { data: res } = await this.$http.post('user/' + this.searchData)
       if (res.meta.status !== 200) {
         return this.$message.error('搜索用户失败!')
       }
@@ -213,15 +211,18 @@ export default {
       this.userlist = res.meta.users
       this.total = res.meta.total
     },
-    // 新建
+    // 新建--添加用户
     async submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // const { data: res } = await this.$http.put(...)
+          console.log(this.createFormData.username)
+          console.log(this.userlist)
+          console.log(this.userlist.includes(this.createFormData.username))
+          // if(this.createFormData.includes(this.userlist)
+          // const { data: res } = this.$http.post('/api/user/add', this.createFormData)
           // if (res.meta.status !== 200) {
           //   return this.$message.error('添加用户失败!')
           // }
-          // this.$message.success('添加用户成功')
           this.$message.success('添加用户成功')
           this.dialogFormVisible = false
         } else {
@@ -266,6 +267,15 @@ export default {
       }).catch(() => {
         this.$message.info('已取消删除')
       })
+    },
+    // 刷新
+    refrechFrom() {
+      // 指令方式加载loading
+      this.screenLoading = true
+      this.getUserList()
+      setTimeout(() => {
+        this.screenLoading = false
+      }, 1000)
     },
     resetForm(formName) {
       this.dialogFormVisible = false

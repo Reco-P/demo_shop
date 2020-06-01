@@ -6,9 +6,9 @@ var mysql = require('mysql')
 var $sql = require('../sqlMap.js')
 
 var conn = mysql.createConnection(models.mysql)
-
 // 连接数据库
 conn.connect()
+
 // 测试数据
 // var sql = 'select * from login;'
 // conn.query(sql, function (err, res) {
@@ -28,11 +28,39 @@ var jsonWrite = function(res, ret) {
         res.send(ret);
     }
 }
-
+//登录
 router.post('/login', (req, res) => {
   var sql = $sql.login.login;
   var params = req.body;
   conn.query(sql, [params.username, params.password], function(err, result) {
+    if (err) {
+      console.log('[SELECT ERROR] - ', err.message);
+      return;
+    }
+    if (result) {
+     jsonWrite(res, result);
+    }
+  })
+})
+//查询用户
+router.post('/user', (req, res) => {
+  var sql = $sql.user.select;
+  var params = req.body;
+  conn.query(sql, function(err, result) {
+    if (err) {
+      console.log('[SELECT ERROR] - ', err.message);
+      return;
+    }
+    if (result) {
+     jsonWrite(res, result);
+    }
+  })
+})
+// 用户 添加
+router.post('/add', (req, res) => {
+  var sql = $sql.user.add;
+  var params = req.body;
+  conn.query(sql, [params.role_name, params.username, params.mobile, params.email], function(err, result) {
     if (err) {
       console.log('[SELECT ERROR] - ', err.message);
       return;

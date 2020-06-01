@@ -56,33 +56,24 @@ export default {
     },
     // 登录
     login() {
-      this.$message.success('登陆成功')
-      console.log(JSON.stringify(this.loginForm))
-      const a = this.$http.post('/api/user/login', this.loginForm)
-      console.log(a)
-      // this.$router.push('/home')
-      /*
       this.$refs.loginFormRef.validate(async valid => {
-        // console.log(valid)
         if (valid) {
-          const { data: response } = await this.$http.post('login', this.loginForm)
-          // console.log(response)
-          if (response.meta.status !== 200) {
-            // console.log('登录失败')
+          const { data: response } = await this.$http.post('/api/user/login', this.loginForm)
+          // if (response.meta.status !== 200) {
+          if (response.length === 0) {
             this.$message.error('登录失败')
           } else {
             this.$message.success('登陆成功')
             // 1.将登录成功后的token保存到客户端sessionStorage中
             // 1.1 token只在当前网页打开期间生效
-            window.sessionStorage.setItem('token', response.data.token)
+            // window.sessionStorage.setItem('token', response.data.token)
+            window.sessionStorage.setItem('token', response[0].username)
             // 2.登录成功跳转到后台主页,路由地址是 /home
             this.$router.push('/home')
           }
         }
       })
-      */
     }
-
   }
 }
 </script>

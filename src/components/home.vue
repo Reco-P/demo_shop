@@ -3,7 +3,7 @@
     <!-- 头部区域 -->
     <el-header>
       <div>
-        <img src="../assets/img2.jpg" style="width:50px; background-color: #35B3EE;"/>
+        <img src="../assets/img2.svg" style="width:50px; background-color: #35B3EE;"/>
         <span>电商管理系统</span>
       </div>
       <el-button type="info" @click='logout'>退出</el-button>
