@@ -57,7 +57,10 @@ export default {
     // 登录
     login() {
       this.$message.success('登陆成功')
-      this.$router.push('/home')
+      console.log(JSON.stringify(this.loginForm))
+      const a = this.$http.post('/api/user/login', this.loginForm)
+      console.log(a)
+      // this.$router.push('/home')
       /*
       this.$refs.loginFormRef.validate(async valid => {
         // console.log(valid)
