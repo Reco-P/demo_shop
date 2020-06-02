@@ -11,7 +11,7 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <!-- 使用clearable属性即可得到一个可清空的输入框 -->
-          <el-input placeholder="请输入内容" v-model="searchData" clearable>
+          <el-input placeholder="请输入姓名" v-model="searchData" clearable>
             <el-button slot="append" icon="el-icon-search" @click="getSearchData()"></el-button>
           </el-input>
         </el-col>
@@ -28,7 +28,7 @@
                   <el-input v-model="createFormData.email" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="mobile" :label-width="formLabelWidth">
-                  <el-input v-model="createFormData.mobile" autocomplete="off"></el-input>
+                  <el-input v-model.number="createFormData.mobile" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="角色" prop="role_name" :label-width="formLabelWidth">
                   <el-input v-model="createFormData.role_name" autocomplete="off"></el-input>
@@ -49,7 +49,7 @@
                   <el-input v-model="modifyFormData.email" autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="电话" prop="mobile" :label-width="formLabelWidth">
-                  <el-input v-model="modifyFormData.mobile" autocomplete="off"></el-input>
+                  <el-input v-model.number="modifyFormData.mobile" autocomplete="off"></el-input>
                 </el-form-item>
               </el-form>
             <div slot="footer" class="dialog-footer">
@@ -71,8 +71,9 @@
         <el-table-column label="状态">
           <!-- 作用域插槽的使用 -->
           <!-- 作用域插槽  {{ scope.row }}可以获得当前行的数据-->
+          <!-- 此处开关无法自由切换，会有联动bug，暂放置 -->
           <template slot-scope="scope">
-            <el-switch v-model="trans_boolean[scope.row.mg_status]" @change="userStatusChanged(scope.row)"></el-switch>
+            <el-switch v-model="trans_boolean[scope.row.mg_status]" @change="userStatusChanged(scope.row)" disabled></el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180px">
@@ -132,6 +133,7 @@ export default {
       },
       // 修改
       modifyFormData: {
+        id: '',
         username: '',
         email: '',
         mobile: ''
@@ -153,7 +155,7 @@ export default {
         ],
         mobile: [
           { required: true, message: '电话不能为空', trigger: 'blur' },
-          { min: 3, max: 15, message: '长度在3-15个字符', trigger: 'blur' }
+          { type: 'number', message: '电话必须为数字值' }
         ],
         role_name: [
           { required: true, message: '角色不能为空', trigger: 'blur' },
@@ -172,18 +174,21 @@ export default {
       if (res.length === 0) {
         return this.$message.error('获取用户列表失败！')
       }
-      this.userlist = res
+      // 分组操作
+      var list = []
+      for (let i = 0, j = res.length; i < j; i += this.queryInfo.pagesize) {
+        list.push(res.slice(i, i + this.queryInfo.pagesize))
+      }
+      this.userlist = list[this.queryInfo.pagenum - 1]
       this.total = res.length
     },
     // 监听 pagesize 改变的事件
     handleSizeChange(newSize) {
-      // console.log(newSize)
       this.queryInfo.pagesize = newSize
       this.getUserList()
     },
     // 监控 pagenum 改变的事件
     handleCurrentChange(newPage) {
-      // console.log(newPage)
       this.queryInfo.pagenum = newPage
       this.getUserList()
     },
@@ -191,48 +196,57 @@ export default {
     async userStatusChanged(userInfo) {
       // console.log(userInfo)
       // id type 是参数 user/:id/state/:type
-      const { data: res } = await this.$http.post('user/' + userInfo.id + '/state/' + userInfo.mg_status)
-      if (res.meta.status !== 200) {
-        userInfo.mg_status = !userInfo.mg_status
-        return this.$message.error('更新用户失败!')
-      }
+      // const { data: res } = await this.$http.post('user/' + userInfo.id + '/state/' + userInfo.mg_status)
+      // if (res.meta.status !== 200) {
+      //   userInfo.mg_status = !userInfo.mg_status
+      //   return this.$message.error('更新用户失败!')
+      // }
       this.$message.success('更新用户状态成功')
     },
     // 搜索功能  也就是说有两种获取方式，一种是获取全部数据后，只需要过滤数据就可以，另外一种就是直接以搜索条件为索引请求数据
-    // 这里是第二种方式
+    // 这里是第一种方式
     async getSearchData() {
-      // console.log(this.searchData)
       // 这里还需要防止sql注入 以及XSS攻击
-      const { data: res } = await this.$http.post('user/' + this.searchData)
-      if (res.meta.status !== 200) {
-        return this.$message.error('搜索用户失败!')
+      // const { data: res } = await this.$http.post('user/' + this.searchData)
+      // if (res.meta.status !== 200) {
+      //   return this.$message.error('搜索用户失败!')
+      // }
+      // 未实现连续搜索
+      const temp = this.searchData
+      if (temp !== '') {
+        this.userlist = this.userlist.filter(function(item) {
+          // var reg = new RegExp(temp, 'g')
+          // // test方法返回布尔值
+          // return reg.test(item.username)
+          return (item.username.indexOf(temp) > -1)
+        })
+        this.total = this.userlist.length
+      } else {
+        this.getUserList()
       }
-      // 获取数据后更新列表
-      this.userlist = res.meta.users
-      this.total = res.meta.total
     },
     // 新建--添加用户
     async submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          console.log(this.createFormData.username)
-          console.log(this.userlist)
-          console.log(this.userlist.includes(this.createFormData.username))
-          // if(this.createFormData.includes(this.userlist)
-          // const { data: res } = this.$http.post('/api/user/add', this.createFormData)
-          // if (res.meta.status !== 200) {
-          //   return this.$message.error('添加用户失败!')
-          // }
+          // 无法处理后台返回数据
+          // 在此只做用户名唯一性校验
+          if (this.userlist.includes(this.createFormData.username)) {
+            return this.$message.error('此用户名已存在!')
+          }
+          this.$http.post('/api/user/add', this.createFormData)
+
           this.$message.success('添加用户成功')
           this.dialogFormVisible = false
-        } else {
-          return false
+          // 添加完成，刷新列表
+          this.refrechFrom()
         }
       })
     },
     // 修改
     modifyForm(info) {
       this.modifyFormVisible = true
+      this.modifyFormData.id = info.id
       this.modifyFormData.username = info.username
       this.modifyFormData.mobile = info.mobile
       this.modifyFormData.email = info.email
@@ -240,15 +254,11 @@ export default {
     async saveModifyForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // const { data: res } = await this.$http.put(...)
-          // if (res.meta.status !== 200) {
-          //   return this.$message.error('修改用户失败!')
-          // }
-          // this.$message.success('修改用户成功')
+          this.$http.post('/api/user/update', this.modifyFormData)
           this.$message.success('修改用户成功')
           this.modifyFormVisible = false
-        } else {
-          return false
+          // 修改完成，刷新列表
+          this.refrechFrom()
         }
       })
     },
@@ -259,10 +269,9 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // const { data: res } = await this.$http.put(...)
-        // if (res.meta.status !== 200) {
-        //   return this.$message.error('删除用户失败!')
-        // }
+        this.$http.post('/api/user/delete', formName)
+        // 删除完成，刷新列表
+        this.refrechFrom()
         this.$message.success('删除成功!')
       }).catch(() => {
         this.$message.info('已取消删除')
@@ -280,7 +289,6 @@ export default {
     resetForm(formName) {
       this.dialogFormVisible = false
       this.modifyFormVisible = false
-      // this.$refs.fromRef.resetFields()
       this.$refs[formName].resetFields()
     }
   }

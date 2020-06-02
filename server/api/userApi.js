@@ -56,13 +56,41 @@ router.post('/user', (req, res) => {
     }
   })
 })
-// 用户 添加
+// 用户--添加
 router.post('/add', (req, res) => {
   var sql = $sql.user.add;
   var params = req.body;
   conn.query(sql, [params.role_name, params.username, params.mobile, params.email], function(err, result) {
     if (err) {
-      console.log('[SELECT ERROR] - ', err.message);
+      console.log('[INSERT ERROR] - ', err.message);
+      return;
+    }
+    if (result) {
+     jsonWrite(res, result);
+    }
+  })
+})
+// 用户--删除
+router.post('/delete', (req, res) => {
+  var sql = $sql.user.data_delete;
+  var params = req.body;
+  conn.query(sql, [params.id], function(err, result) {
+    if (err) {
+      console.log('[DELETE ERROR] - ', err.message);
+      return;
+    }
+    if (result) {
+     jsonWrite(res, result);
+    }
+  })
+})
+// 用户--修改
+router.post('/update', (req, res) => {
+  var sql = $sql.user.update;
+  var params = req.body;
+  conn.query(sql, [params.mobile, params.email, params.id], function(err, result) {
+    if (err) {
+      console.log('[UPDATE ERROR] - ', err.message);
       return;
     }
     if (result) {
