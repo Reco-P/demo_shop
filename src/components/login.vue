@@ -34,6 +34,8 @@ export default {
         username: 'zs',
         password: '123'
       },
+      starsCount: 800, // 星数
+      distance: 800, // 间距
       // 这是表单的验证规则对象
       loginFormRules: {
         // 用户名，密码验证
@@ -48,6 +50,16 @@ export default {
       }
     }
   },
+  // mounted() {
+  //   const _this = this
+  //   const starArr = _this.$refs.star
+  //   starArr.forEach(item => {
+  //     var speed = 0.2 + (Math.random() * 1)
+  //     var thisDistance = _this.distance + (Math.random() * 300)
+  //     item.style.transformOrigin = `0 0 ${thisDistance}px`
+  //     item.style.transform = `translate3d(0,0,-${thisDistance}px) rotateY(${(Math.random() * 360)}deg routateX(${(Math.random() * -50)}deg) scale(${speed},${speed}))`
+  //   })
+  // },
   methods: {
     // 点击重置按钮,重置数据
     resetLoginForm () {
@@ -79,8 +91,11 @@ export default {
 
 <style lang='less' scoped='scoped'>
 .login_container {
-  background-color : #2b4b6b;
   height: 100%;
+  background: radial-gradient(200% 100% at bottom center, #f7f7b6, #e96f73, #1b2947);
+  background: radial-gradient(220% 105% at top center, #1b2947 10%, #75517d 40%, #e95f92 65%, #f7f7b6);
+  background-attachment: fixed;
+  overflow: hidden;
 }
 
 .login_box {
