@@ -33,7 +33,8 @@ import
   Step,
   Tabs,
   TabPane,
-  Upload
+  Upload,
+  Divider
 } from 'element-ui'
 
 Vue.use(Button)
@@ -67,6 +68,7 @@ Vue.use(Step)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Upload)
+Vue.use(Divider)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$loading = Loading

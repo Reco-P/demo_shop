@@ -68,7 +68,7 @@ export default {
         goodName: '',
         style: '',
         prop: '',
-        introduce: ''
+        introduce: '<p>123<span style="color: rgb(230, 0, 0);">123</span><em style="color: rgb(230, 0, 0);">123</em></p>'
       },
       fileList: [{ name: 'logo.png', url: 'http://localhost:8080/93795c48-152a-415c-b2ac-141b7ecaa151' }],
       url: 'http://localhost:8080/api/goods/upload',
