@@ -12,6 +12,8 @@ import GoodLists from '../components/goods/goodLists.vue'
 import Orders from '../components/orders/orders.vue'
 import Reports from '../components/reports/reports.vue'
 
+import AddGoods from '../components/goods/addGoods.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +34,7 @@ const routes = [
       // 商品管理
       { path: '/lists', component: Lists },
       { path: '/goods', component: Goods },
+      { path: '/addGoods', component: AddGoods },
       { path: '/goodLists', component: GoodLists },
       // 订单管理
       { path: '/orders', component: Orders },

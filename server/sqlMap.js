@@ -10,6 +10,9 @@ var sqlMap = {
     update_status: 'update user set mg_status = 0 where id = 520;',
     update: 'update user set mobile = ?, email = ? where id = ?;',
     data_delete: 'delete from user where id = ?;'
+  },
+  goods:{
+    add: 'insert into picture (name,url) VALUES (?,?);'
   }
 }
 module.exports = sqlMap;

@@ -5,6 +5,11 @@ import './plugins/element.js'
 // 导入全局样式表
 import './assets/global.css'
 import TreeTable from 'vue-table-with-tree-grid'
+// 导入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 // 导入axios
 import axios from 'axios'
 // 配置请求的根路径
@@ -20,6 +25,8 @@ Vue.prototype.$http = axios
 Vue.config.productionTip = false
 // 注册为全局组件
 Vue.component('tree-table', TreeTable)
+// 注册为全局组件
+Vue.use(VueQuillEditor)
 
 new Vue({
   router,

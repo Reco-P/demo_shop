@@ -27,7 +27,13 @@ import
   Dialog,
   Loading,
   Collapse,
-  CollapseItem
+  CollapseItem,
+  Alert,
+  Steps,
+  Step,
+  Tabs,
+  TabPane,
+  Upload
 } from 'element-ui'
 
 Vue.use(Button)
@@ -55,6 +61,12 @@ Vue.use(Dialog)
 Vue.use(Loading)
 Vue.use(Collapse)
 Vue.use(CollapseItem)
+Vue.use(Alert)
+Vue.use(Steps)
+Vue.use(Step)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Upload)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$loading = Loading
