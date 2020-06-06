@@ -83,19 +83,14 @@ export default {
         return false
       }
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList)
-    },
+    handleRemove(file, fileList) {},
     handlePreview(file) {
-      console.log(file)
       this.previewPath = file.url
       this.previewVisible = true
     },
     handSuccess(response) {
-      console.log(response)
     },
     addForm() {
-      console.log(this.form)
       // this.$http.post('/api/goods/add')
       this.$message.success('添加商品成功')
       this.$router.push('/goods')

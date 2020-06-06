@@ -1,5 +1,24 @@
 // 代理 解决跨域问题
 module.exports = {
+  chainWebpack: config => {
+    config.when(process.env.NODE_ENV === 'production', config => {
+      // 为生产环境修改配置...
+      config.entry('app').clear().add('./src/main-prod.js')
+      config.set('externals', {
+        vue: 'Vue',
+        'vue-router': 'VueRouter',
+        axios: 'axios',
+        lodash: '_',
+        echarts: 'echarts',
+        nprogress: 'NProgress',
+        'vue-quill-editor': 'VueQuillEditor'
+      })
+    })
+    config.when(process.env.NODE_ENV === 'development', config => {
+      // 为开发环境修改配置...
+      config.entry('app').clear().add('./src/main-dev.js')
+    })
+  },
   devServer: {
     host: 'localhost',
     port: '8080', // 端口号
