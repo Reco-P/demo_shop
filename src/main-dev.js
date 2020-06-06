@@ -38,6 +38,19 @@ Vue.component('tree-table', TreeTable)
 // 注册为全局组件
 Vue.use(VueQuillEditor)
 
+Vue.filter('dateFormate', function(originVal) {
+  var date = new Date(originVal)
+  var y = date.getFullYear()
+  var m = (date.getMonth() + 1).toString().padStart(2, '0') // 获取的月份范围是1-11
+  var d = date.getDate().toString().padStart(2, '0') // what day is it today? getDay() 是获取星期几， what date... getDate()才是获取几号
+  var h = date.getHours().toString().padStart(2, '0')
+  var i = date.getMinutes().toString().padStart(2, '0')
+  var s = date.getSeconds().toString().padStart(2, '0')
+
+  // padStart从头补 padEnd从尾补
+  return y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s
+})
+
 new Vue({
   router,
   render: h => h(App)

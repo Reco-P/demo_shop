@@ -6,6 +6,7 @@
         <img src="../assets/img2.svg" style="width:50px; background-color: #35B3EE;"/>
         <span>电商管理系统</span>
       </div>
+      <el-tag type="success">{{ time | dateFormate }}</el-tag>
       <el-button type="info" @click='logout'>退出</el-button>
     </el-header>
     <!-- 主体区域 -->
@@ -67,8 +68,12 @@ export default {
       // 是否折叠
       collapseFlag: false,
       // 被激活的拦截地址
-      activePath: ''
+      activePath: '',
+      time: '2020'
     }
+  },
+  mounted() {
+    this.time = new Date()
   },
   created() {
     // this.getMenuList()
@@ -144,5 +149,10 @@ export default {
   text-align: center;
   letter-spacing: 0.2em;
   cursor: pointer;
+}
+
+.el-tag {
+  display: flex;
+  margin-left: 900px;
 }
 </style>
