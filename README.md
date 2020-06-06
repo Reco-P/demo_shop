@@ -25,7 +25,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### 优化项
 ```
-1.路由懒加载
+1.生成打包报告
+2.第三方库启用CDN ( 通过externals 加载外部CDN资源)
+3.element-ui启用懒加载
+4.路由懒加载
+5.首页内容定制
 ```
 
 ### CDN资源引用
@@ -45,4 +49,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 <!-- 富文本编辑器的 js 文件 -->
 <script src="https//cdn.staticfile.org/quill/1.3.4/quill.min.js"></script>
 <script src="https//cdn.jsdeliver.net/vue-quill-editor@3.0.4/dist/vue-quill-editor.js"></script>
+<!-- element-ui样式表 -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/element-ui/2.8.2/theme-chalk/index.css" />
+<!-- element-ui js -->
+<script src="https//cdn.jsdeliver.net/element-ui/2.8.2/index.js"></script>
 ```

@@ -1,18 +1,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '../components/login.vue'
-import Home from '../components/home.vue'
-import Welcome from '../components/welcome.vue'
-import Users from '../components/user/users.vue'
-import Charcters from '../components/rights/charcters.vue'
-import Roles from '../components/rights/roles.vue'
-import Lists from '../components/goods/lists.vue'
-import Goods from '../components/goods/goods.vue'
-import GoodLists from '../components/goods/goodLists.vue'
-import Orders from '../components/orders/orders.vue'
-import Reports from '../components/reports/reports.vue'
-
-import AddGoods from '../components/goods/addGoods.vue'
+const Login = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/login.vue')
+const Home = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/home.vue')
+const Welcome = () => import(/* webpackChunkName: "login_home_welcome" */ '../components/welcome.vue')
+const Users = () => import(/* webpackChunkName: "user_charcters_role" */ '../components/user/users.vue')
+const Charcters = () => import(/* webpackChunkName: "user_charcters_role" */ '../components/rights/charcters.vue')
+const Roles = () => import(/* webpackChunkName: "user_charcters_role" */ '../components/rights/roles.vue')
+const Lists = () => import(/* webpackChunkName: "lists_goods_goodlists" */ '../components/goods/lists.vue')
+const Goods = () => import(/* webpackChunkName: "lists_goods_goodlists" */ '../components/goods/goods.vue')
+const AddGoods = () => import(/* webpackChunkName: "lists_goods_goodlists" */ '../components/goods/addGoods.vue')
+const GoodLists = () => import(/* webpackChunkName: "lists_goods_goodlists" */ '../components/goods/goodLists.vue')
+const Orders = () => import(/* webpackChunkName: "orders_reports" */ '../components/orders/orders.vue')
+const Reports = () => import(/* webpackChunkName: "orders_reports" */ '../components/reports/reports.vue')
 
 Vue.use(VueRouter)
 

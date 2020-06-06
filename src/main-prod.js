@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import './plugins/element.js'
 // 导入全局样式表
 import './assets/global.css'
 import TreeTable from 'vue-table-with-tree-grid'

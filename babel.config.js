@@ -17,6 +17,7 @@ module.exports = {
       }
     ],
     // 发布产品时的产品数组
-    ...prodPlugins
+    ...prodPlugins,
+    '@babel/plugin-syntax-dynamic-import'
   ]
 }
